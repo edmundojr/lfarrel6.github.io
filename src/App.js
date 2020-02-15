@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
+import { useDarkMode } from './hooks';
 
 import {
 	MaxHeightFluidContainer,
-	Background,
-	NeuSmiley,
 	Header,
 	Subtitle,
 	SubtleLink,
@@ -17,19 +16,13 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { theme } from './theme';
 import { ThemeProvider } from 'styled-components';
 
-const NeuBackground = () => {
-	return (
-		<Background>
-			<NeuSmiley height='300px' width='300px' />
-		</Background>
-	);
-};
-
 function App() {
-	const [darkMode, setDarkMode] = useState(false);
-	const [statefulTheme, setTheme] = useState(theme.light);
+	const [mode, toggleTheme] = useDarkMode();
+	const [statefulTheme, setTheme] = useState(theme[mode]);
 
-	useEffect(() => setTheme(theme[darkMode ? 'dark' : 'light']), [darkMode]);
+	useEffect(() => {
+		setTheme(theme[mode]);
+	}, [mode]);
 
 	return (
 		<ThemeProvider theme={statefulTheme}>
@@ -52,7 +45,7 @@ function App() {
 							.
 						</Subtitle>
 					</PaddedDiv>
-					<FAB onClick={() => setDarkMode(!darkMode)} darkMode={darkMode} />
+					<FAB onClick={toggleTheme} darkMode={mode === 'dark'} />
 				</MaxHeightFluidContainer>
 			</Router>
 		</ThemeProvider>
